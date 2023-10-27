@@ -8,19 +8,21 @@
 1. Склонируйте репозиторий на своем компьютере:
 
 ```shell
-git clone <URL репозитория>
+git clone https://github.com/Pisarev82/online_store.git
 ```
 
 2. Перейдите в папку проекта:
 
 ```shell
-cd <папка проекта>
+cd src
 ```
 
 3. Установите зависимости:
 
 ```shell
 pip install -r requirements.txt
+Либо
+pipenv sync
 ```
 
 ## Запуск сервера разработки
@@ -28,7 +30,7 @@ pip install -r requirements.txt
 1. Перейдите в корневую папку проекта:
 
 ```shell
-cd <папка проекта>
+cd src
 ```
 
 2. Запустите сервер разработки Django:
@@ -47,7 +49,7 @@ python manage.py runserver
 
 ### Просмотр всех категорий с подкатегориями
 
-API-эндпоинт `/api/categories/` предоставляет возможность просмотра всех категорий с их подкатегориями. Результаты поддерживают пагинацию.
+API-эндпоинт `/categories/` предоставляет возможность просмотра всех категорий с их подкатегориями. Результаты поддерживают пагинацию.
 
 ### Добавление, изменение и удаление продуктов
 
@@ -55,7 +57,7 @@ API-эндпоинт `/api/categories/` предоставляет возмож�
 
 ### Вывод продуктов с пагинацией
 
-API-эндпоинт `/api/products/` предоставляет возможность просмотра продуктов с пагинацией. Каждый продукт в выводе содержит следующие поля: наименование, slug, категория, подкатегория, цена и список изображений.
+API-эндпоинт `/products/` предоставляет возможность просмотра продуктов с пагинацией. Каждый продукт в выводе содержит следующие поля: наименование, slug, категория, подкатегория, цена и список изображений.
 
 ### Управление корзиной
 
@@ -71,7 +73,8 @@ API-эндпоинты позволяют добавлять, изменять (
 
 - Django - популярный фреймворк для разработки веб-приложений на языке Python.
 - Django REST Framework (DRF) - расширение Django для создания RESTful API.
-- [Другие библиотеки или пакеты...]
+- Swagger - помогает тестировать функционал, и наглядно показывает доступные методы
+- SIMPLE_JWT - библиотека аутентификиции с использованием JWT токена
 
 ## Примеры запросов
 
@@ -80,54 +83,89 @@ API-эндпоинты позволяют добавлять, изменять (
 **URL:**
 
 ```
-GET /api/categories/ HTTP/1.1
+GET /categories/?limit=10&offset=1
 ```
 
 **Ответ:**
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Electronics",
-    "slug": "electronics",
-    "image": "http://example.com/media/categories/electronics.jpg",
-    "subcategories": [
-      {
-        "id": 1,
-        "name": "Mobile Phones",
-        "slug": "mobile-phones",
-        "image": "http://example.com/media/categories/mobile-phones.jpg"
-      },
-      {
-        "id": 2,
-        "name": "Laptops",
-        "slug": "laptops",
-        "image": "http://example.com/media/categories/laptops.jpg"
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Clothing",
-    "slug": "clothing",
-    "image": "http://example.com/media/categories/clothing.jpg",
-    "subcategories": [
-      {
-        "id": 3,
-        "name": "Men's Clothing",
-        "slug": "mens-clothing",
-        "image": "http://example.com/media/categories/mens-clothing.jpg"
-      },
-      {
-        "id": 4,
-        "name": "Women's Clothing",
-        "slug": "womens-clothing",
-        "image": "http://example.com/media/categories/womens-clothing.jpg"
-      }
-    ]
-  }
-]
+{
+  "count": 12,
+  "next": "http://127.0.0.1:8000/categories/?limit=10&offset=11",
+  "previous": "http://127.0.0.1:8000/categories/?limit=10",
+  "results": [
+    {
+      "id": 2,
+      "title": "Вода",
+      "parent": null,
+      "slug": "voda",
+      "image": null
+    },
+    {
+      "id": 4,
+      "title": "Газированная",
+      "parent": 2,
+      "slug": "gazirovannaia",
+      "image": null
+    },
+    {
+      "id": 5,
+      "title": "Не газированная",
+      "parent": 2,
+      "slug": "ne-gazirovannaia",
+      "image": null
+    },
+    {
+      "id": 6,
+      "title": "Сладкая",
+      "parent": 2,
+      "slug": "sladkaia",
+      "image": null
+    },
+    {
+      "id": 3,
+      "title": "Еда",
+      "parent": null,
+      "slug": "eda",
+      "image": null
+    },
+    {
+      "id": 9,
+      "title": "Вкусная",
+      "parent": 3,
+      "slug": "vkusnaia",
+      "image": null
+    },
+    {
+      "id": 7,
+      "title": "Готовая",
+      "parent": 3,
+      "slug": "gotovaia",
+      "image": null
+    },
+    {
+      "id": 10,
+      "title": "Клевая",
+      "parent": 3,
+      "slug": "klevaia",
+      "image": null
+    },
+    {
+      "id": 8,
+      "title": "Полезная",
+      "parent": 3,
+      "slug": "poleznaia",
+      "image": null
+    },
+    {
+      "id": 11,
+      "title": "Сладости",
+      "parent": null,
+      "slug": "sladosti",
+      "image": null
+    }
+  ]
+}
 ```
 
 ### Добавление продукта в корзину
@@ -135,15 +173,22 @@ GET /api/categories/ HTTP/1.1
 **URL:**
 
 ```
-POST /api/cart/products/ HTTP/1.1
+POST /cart-item/
+```
+
+**Заголовок запроса**
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk4NDUwMzE3LCJpYXQiOjE2OTgzN
 ```
 
 **Тело запроса:**
 
 ```json
 {
-  "product_id": 1,
-  "quantity": 2
+  "cart": 2,
+  "product": 5,
+  "quantity": 5
 }
 ```
 
@@ -151,30 +196,9 @@ POST /api/cart/products/ HTTP/1.1
 
 ```json
 {
-  "id": 1,
-  "product": {
-    "id": 1,
-    "name": "Product 1",
-    "slug": "product-1",
-    "category": "Electronics",
-    "subcategory": "Mobile Phones",
-    "price": 100,
-    "images": [
-      {
-        "image": "http://example.com/media/products/product-1-image.jpg",
-        "thumbnail": "http://example.com/media/products/product-1-image-thumbnail.jpg",
-        "full_size": "http://example.com/media/products/product-1-image-full.jpg"
-      }
-    ]
-  },
-  "quantity": 2
+  "cart": 2,
+  "product": 5,
+  "product_name": "Мясо",
+  "quantity": 5
 }
 ```
-
-## Вклад
-
-Если у вас есть комментарии, предложения или обнаружены ошибки в коде или документации, пожалуйста, откройте [Issue](<ссылка на репозиторий/issue>) или [Pull Request](<ссылка на репозиторий/pulls>) в соответствующем репозитории.
-
-## Лицензия
-
-[MIT](LICENSE)
