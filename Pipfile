@@ -7,6 +7,13 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 django-mptt = "*"
+pillow = "*"
+python-dotenv = "*"
+install = "*"
+python-slugify = "*"
+drf-yasg = "*"
+pyjwt = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
