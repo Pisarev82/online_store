@@ -90,7 +90,11 @@ class Cart(models.Model):
         on_delete=models.CASCADE,
         related_name='carts',
     )
-    products = models.ManyToManyField(Product, through='CartItem', related_name='cart_items',)
+    products = models.ManyToManyField(
+        Product,
+        through='CartItem',
+        related_name='cart_items',
+    )
 
     class Meta:
         verbose_name = 'Cart'

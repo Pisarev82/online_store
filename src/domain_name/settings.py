@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'mptt',
     'slugify',
     'drf_yasg',  # Swagger
-    'catalog'
+    'catalog',   # Мое приложение
 ]
 
 

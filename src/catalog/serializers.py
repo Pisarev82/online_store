@@ -62,11 +62,11 @@ class CartItemsSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     owner_name = serializers.ReadOnlyField(source='owner.username')
-    products_in_cart = CartItemsSerializer(source='product_in_cart', many=True, read_only=True)
+    products_in_cart = CartItemsSerializer(
+        source='product_in_cart', many=True, read_only=True)
     total = serializers.SerializerMethodField()
 
     def get_total(self, obj):
-
         products = obj.products.values()
         prices = [i.get('price') for i in products]
         cart_items = obj.product_in_cart.values()
